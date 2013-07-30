@@ -1,7 +1,7 @@
 # This Makefile is for the RT::Extension::SMSNotify extension to perl.
 #
 # It was generated automatically by MakeMaker version
-# 6.6302 (Revision: 66302) from the contents of
+# 6.64 (Revision: 66400) from the contents of
 # Makefile.PL. Don't edit this file, edit Makefile.PL instead.
 #
 #       ANY CHANGES MADE HERE WILL BE LOST!
@@ -13,7 +13,7 @@
 
 #     ABSTRACT => q[Send SMS notifications from RT via SMS::Send]
 #     AUTHOR => [q[Craig Ringer <craig@2ndquadrant.com>]]
-#     BUILD_REQUIRES => { Test::More=>q[0.47], ExtUtils::MakeMaker=>q[6.6302], Module::Install::ReadmeFromPod=>q[0.20], Module::Install::AutoManifest=>q[0.003] }
+#     BUILD_REQUIRES => { Test::More=>q[0.47], ExtUtils::MakeMaker=>q[6.59], Module::Install::ReadmeFromPod=>q[0.20], Module::Install::AutoManifest=>q[0.003] }
 #     CONFIGURE_REQUIRES => {  }
 #     DISTNAME => q[RT-Extension-SMSNotify]
 #     INSTALLARCHLIB => q[/opt/rt4/local/plugins/RT-Extension-SMSNotify/lib]
@@ -25,10 +25,11 @@
 #     MIN_PERL_VERSION => q[5.010001]
 #     NAME => q[RT::Extension::SMSNotify]
 #     NO_META => q[1]
-#     PREREQ_PM => { Test::More=>q[0.47], ExtUtils::MakeMaker=>q[6.6302], Module::Install::RTx=>q[0.30], Module::Install::AutoManifest=>q[0.003], Module::Install::ReadmeFromPod=>q[0.20], Carp=>q[0], SMS::Send=>q[1.06] }
-#     VERSION => q[1.03]
+#     PREREQ_PM => { Test::More=>q[0.47], ExtUtils::MakeMaker=>q[6.59], Module::Install::RTx=>q[0.30], Module::Install::AutoManifest=>q[0.003], Module::Install::ReadmeFromPod=>q[0.20], Carp=>q[0], SMS::Send=>q[1.06] }
+#     TEST_REQUIRES => {  }
+#     VERSION => q[1.04]
 #     VERSION_FROM => q[lib/RT/Extension/SMSNotify.pm]
-#     dist => {  }
+#     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
 #     realclean => { FILES=>q[MYMETA.yml] }
 #     test => { TESTS=>q[] }
 
@@ -48,7 +49,7 @@ DLSRC = dl_dlopen.xs
 EXE_EXT = 
 FULL_AR = /usr/bin/ar
 LD = gcc
-LDDLFLAGS = -shared -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic -Wl,-z,relro 
+LDDLFLAGS = -shared -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -Wl,-z,relro 
 LDFLAGS =  -fstack-protector
 LIBC = 
 LIB_EXT = .a
@@ -69,11 +70,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = RT::Extension::SMSNotify
 NAME_SYM = RT_Extension_SMSNotify
-VERSION = 1.03
+VERSION = 1.04
 VERSION_MACRO = VERSION
-VERSION_SYM = 1_03
+VERSION_SYM = 1_04
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 1.03
+XS_VERSION = 1.04
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -146,9 +147,9 @@ PERM_DIR = 755
 PERM_RW = 644
 PERM_RWX = 755
 
-MAKEMAKER   = /usr/share/perl5/ExtUtils/MakeMaker.pm
-MM_VERSION  = 6.6302
-MM_REVISION = 66302
+MAKEMAKER   = /usr/share/perl5/vendor_perl/ExtUtils/MakeMaker.pm
+MM_VERSION  = 6.64
+MM_REVISION = 66400
 
 # FULLEXT = Pathname for extension directory (eg Foo/Bar/Oracle).
 # BASEEXT = Basename part of FULLEXT. May be just equal FULLEXT. (eg Oracle)
@@ -215,7 +216,7 @@ PM_TO_BLIB = lib/RT/Action/SMSNotify.pm \
 
 
 # --- MakeMaker platform_constants section:
-MM_Unix_VERSION = 6.6302
+MM_Unix_VERSION = 6.64
 PERL_MALLOC_DEF = -DPERL_EXTMALLOC_DEF -Dmalloc=Perl_malloc -Dfree=Perl_mfree -Drealloc=Perl_realloc -Dcalloc=Perl_calloc
 
 
@@ -272,7 +273,7 @@ ZIPFLAGS = -r
 COMPRESS = gzip --best
 SUFFIX = .gz
 SHAR = shar
-PREOP = $(NOECHO) $(NOOP)
+PREOP = $(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"
 POSTOP = $(NOECHO) $(NOOP)
 TO_UNIX = $(NOECHO) $(NOOP)
 CI = ci -u
@@ -280,7 +281,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = RT-Extension-SMSNotify
-DISTVNAME = RT-Extension-SMSNotify-1.03
+DISTVNAME = RT-Extension-SMSNotify-1.04
 
 
 # --- MakeMaker macro section:
@@ -833,7 +834,26 @@ pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 
 
 # End.
-# Postamble by Module::Install 1.04
+# Postamble by Module::Install 1.06
+# --- Module::Install::Admin::Makefile section:
+
+realclean purge ::
+	$(RM_F) $(DISTVNAME).tar$(SUFFIX)
+	$(RM_F) MANIFEST.bak _build
+	$(PERL) "-Ilib" "-MModule::Install::Admin" -e "remove_meta()"
+	$(RM_RF) inc
+
+reset :: purge
+
+upload :: test dist
+	cpan-upload -verbose $(DISTVNAME).tar$(SUFFIX)
+
+grok ::
+	perldoc Module::Install
+
+distsign ::
+	cpansign -s
+
 install ::
 	$(NOECHO) $(PERL) -MExtUtils::Install -e "install({q(lib), q(/opt/rt4/local/plugins/RT-Extension-SMSNotify/lib), q(etc), q(/opt/rt4/local/plugins/RT-Extension-SMSNotify/etc)})"
 
@@ -843,6 +863,12 @@ initdb ::
 initialize-database ::
 	$(NOECHO) $(PERL) -Ilib -I"/opt/rt4/local/lib" -I"/opt/rt4/lib" -Minc::Module::Install -e"RTxInitDB(qw(insert $(NAME) $(VERSION)))"
 
+create_distdir: manifest_clean manifest
+
+distclean :: manifest_clean
+
+manifest_clean:
+	$(RM_F) MANIFEST
 # --- Module::Install::AutoInstall section:
 
 config :: installdeps

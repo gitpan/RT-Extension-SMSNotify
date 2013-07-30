@@ -231,7 +231,7 @@ use RT::Interface::Email;
 use RT::Extension::SMSNotify::PagerForUser;
 
 BEGIN {
-        our $VERSION = '1.03';
+        our $VERSION = '1.04';
 }
 
 use RT::Action::SMSNotify;

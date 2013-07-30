@@ -1,10 +1,10 @@
 {
    "abstract" : "Send SMS notifications from RT via SMS::Send",
    "author" : [
-      "unknown"
+      "Craig Ringer <craig@2ndquadrant.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.04, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "ExtUtils::MakeMaker version 6.64, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -15,14 +15,14 @@
    "name" : "RT-Extension-SMSNotify",
    "no_index" : {
       "directory" : [
-         "etc",
+         "t",
          "inc"
       ]
    },
    "prereqs" : {
       "build" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.6302",
+            "ExtUtils::MakeMaker" : "6.59",
             "Module::Install::AutoManifest" : "0.003",
             "Module::Install::ReadmeFromPod" : "0.20",
             "Test::More" : "0.47"
@@ -30,7 +30,7 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.6302"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {
@@ -43,17 +43,5 @@
       }
    },
    "release_status" : "stable",
-   "resources" : {
-      "bugtracker" : {
-         "web" : "https://rt.cpan.org/Dist/Display.html?Status=Active&Queue=RT-Extension-SMSNotify"
-      },
-      "homepage" : "https://github.com/2ndQuadrant/rt-extension-smsnotify-perl",
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ],
-      "repository" : {
-         "url" : "git://github.com/2ndQuadrant/rt-extension-smsnotify-perl.git"
-      }
-   },
-   "version" : "1.00"
+   "version" : "1.04"
 }

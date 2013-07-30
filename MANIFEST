@@ -1,3 +1,4 @@
+Changes
 etc/initialdata
 inc/Module/AutoInstall.pm
 inc/Module/Install.pm
@@ -16,6 +17,10 @@ inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/RT/Action/SMSNotify.pm
 lib/RT/Extension/SMSNotify.pm
+lib/RT/Extension/SMSNotify/OnShift.pm
+lib/RT/Extension/SMSNotify/PagerForUser.pm
+lib/RT/Extension/SMSNotify/Shifts.pm
+LICENSE
 Makefile
 Makefile.PL
 MANIFEST			This list of files
