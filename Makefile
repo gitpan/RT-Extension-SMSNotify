@@ -26,7 +26,7 @@
 #     NAME => q[RT::Extension::SMSNotify]
 #     NO_META => q[1]
 #     PREREQ_PM => { Test::More=>q[0.47], ExtUtils::MakeMaker=>q[6.6302], Module::Install::RTx=>q[0.30], Module::Install::AutoManifest=>q[0.003], Module::Install::ReadmeFromPod=>q[0.20], Carp=>q[0], SMS::Send=>q[1.06] }
-#     VERSION => q[1.02]
+#     VERSION => q[1.03]
 #     VERSION_FROM => q[lib/RT/Extension/SMSNotify.pm]
 #     dist => {  }
 #     realclean => { FILES=>q[MYMETA.yml] }
@@ -54,7 +54,7 @@ LIBC =
 LIB_EXT = .a
 OBJ_EXT = .o
 OSNAME = linux
-OSVERS = 2.6.32-279.19.1.el6.x86_64
+OSVERS = 2.6.32-358.2.1.el6.x86_64
 RANLIB = :
 SITELIBEXP = /usr/local/share/perl5
 SITEARCHEXP = /usr/local/lib64/perl5
@@ -69,11 +69,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = RT::Extension::SMSNotify
 NAME_SYM = RT_Extension_SMSNotify
-VERSION = 1.02
+VERSION = 1.03
 VERSION_MACRO = VERSION
-VERSION_SYM = 1_02
+VERSION_SYM = 1_03
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 1.02
+XS_VERSION = 1.03
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -173,7 +173,8 @@ H_FILES  =
 MAN1PODS = 
 MAN3PODS = lib/RT/Action/SMSNotify.pm \
 	lib/RT/Extension/SMSNotify.pm \
-	lib/RT/Extension/SMSNotify/OnShift.pm
+	lib/RT/Extension/SMSNotify/OnShift.pm \
+	lib/RT/Extension/SMSNotify/PagerForUser.pm
 
 # Where is the Config information that we are using/depend on
 CONFIGDEP = $(PERL_ARCHLIB)$(DFSEP)Config.pm $(PERL_INC)$(DFSEP)config.h
@@ -198,10 +199,13 @@ PERL_ARCHIVE_AFTER =
 TO_INST_PM = lib/RT/Action/SMSNotify.pm \
 	lib/RT/Extension/SMSNotify.pm \
 	lib/RT/Extension/SMSNotify/OnShift.pm \
+	lib/RT/Extension/SMSNotify/PagerForUser.pm \
 	lib/RT/Extension/SMSNotify/Shifts.pm
 
 PM_TO_BLIB = lib/RT/Action/SMSNotify.pm \
 	blib/lib/RT/Action/SMSNotify.pm \
+	lib/RT/Extension/SMSNotify/PagerForUser.pm \
+	blib/lib/RT/Extension/SMSNotify/PagerForUser.pm \
 	lib/RT/Extension/SMSNotify.pm \
 	blib/lib/RT/Extension/SMSNotify.pm \
 	lib/RT/Extension/SMSNotify/Shifts.pm \
@@ -276,7 +280,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = RT-Extension-SMSNotify
-DISTVNAME = RT-Extension-SMSNotify-1.02
+DISTVNAME = RT-Extension-SMSNotify-1.03
 
 
 # --- MakeMaker macro section:
@@ -431,10 +435,12 @@ POD2MAN = $(POD2MAN_EXE)
 
 manifypods : pure_all  \
 	lib/RT/Action/SMSNotify.pm \
+	lib/RT/Extension/SMSNotify/PagerForUser.pm \
 	lib/RT/Extension/SMSNotify.pm \
 	lib/RT/Extension/SMSNotify/OnShift.pm
 	$(NOECHO) $(POD2MAN) --section=3 --perm_rw=$(PERM_RW) \
 	  lib/RT/Action/SMSNotify.pm $(INST_MAN3DIR)/RT::Action::SMSNotify.$(MAN3EXT) \
+	  lib/RT/Extension/SMSNotify/PagerForUser.pm $(INST_MAN3DIR)/RT::Extension::SMSNotify::PagerForUser.$(MAN3EXT) \
 	  lib/RT/Extension/SMSNotify.pm $(INST_MAN3DIR)/RT::Extension::SMSNotify.$(MAN3EXT) \
 	  lib/RT/Extension/SMSNotify/OnShift.pm $(INST_MAN3DIR)/RT::Extension::SMSNotify::OnShift.$(MAN3EXT) 
 
@@ -813,6 +819,7 @@ ppd :
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
 	  lib/RT/Action/SMSNotify.pm blib/lib/RT/Action/SMSNotify.pm \
+	  lib/RT/Extension/SMSNotify/PagerForUser.pm blib/lib/RT/Extension/SMSNotify/PagerForUser.pm \
 	  lib/RT/Extension/SMSNotify.pm blib/lib/RT/Extension/SMSNotify.pm \
 	  lib/RT/Extension/SMSNotify/Shifts.pm blib/lib/RT/Extension/SMSNotify/Shifts.pm \
 	  lib/RT/Extension/SMSNotify/OnShift.pm blib/lib/RT/Extension/SMSNotify/OnShift.pm 

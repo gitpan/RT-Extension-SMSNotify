@@ -20,5 +20,11 @@
        Description => 'Send SMS to all contacts for a ticket' , # loc
        ExecModule  => 'SMSNotify',
        Argument    => 'TicketAdminCc,TicketRequestors,TicketOwner,TicketCc'
+    },
+    {
+       Name        => '[SMSNotify] SMS Ticket and Queue Cc/AdminCc ignoring shifts',
+       Description => 'Send SMS to all ticket and queue ccs and adminccs with no filter function',
+       ExecModule  => 'SMSNotify',
+       Argument    => 'TicketAdminCc,TicketOwner,TicketCc,filtermodule:RT::Extension::SMSNotify::PagerForUser'
     }
 )

@@ -61,11 +61,20 @@ All queue watchers in the AdminCc category on the queue
 The RT group with name 'name'. Ignored with a warning if it doesn't exist.
 No mechanism for escaping commas in names is provided.
 
-NOT YET IMPLEMENTED
-
 =head2 p:number
 
 A phone number, specified in +0000000 form with no spaces, commas etc.
+
+=head2 filtermodule:
+
+You may override the phone number filter function on a per-call basis by
+passing filtermodule: in the arguments. The argument must be the name of a
+module that defines a GetPhoneForUser function.
+
+This can appear anywhere in the argument string. For example, to force
+the use of the OnShift filter for this action, you might write:
+
+ TicketAdminCc,TicketRequestors,TicketOwner,TicketCc,filtermodule:RT::Extension::SMSNotify::OnShift
 
 =cut
 
@@ -98,7 +107,7 @@ sub _ArgToUsers {
 			$m = $ticket->AdminCc->UserMembersObj->ItemsArrayRef;
 		}
 		when (/^TicketOwner$/) {
-			$m = $ticket->Owner->UserMembersObj->ItemsArrayRef;
+			$m = $ticket->OwnerGroup->UserMembersObj->ItemsArrayRef;
 		}
 		when (/^QueueCc$/) {
 			$m = $queue->Cc->UserMembersObj->ItemsArrayRef;
@@ -155,21 +164,29 @@ sub Prepare {
 		return 0;
 	}
 
-	my $getpagerfn = RT::Extension::SMSNotify::_GetPhoneLookupFunction();
-
 	my $ticket = $self->TicketObj;
 	my $destusers = {};
 	my %numbers = ();
+	my $filter_arg = undef;
 	foreach my $argpart (split(',', $self->Argument)) {
-		my ($userarray, $phoneno) = _ArgToUsers($ticket, $argpart);
-		_AddPagersToRecipients($destusers, $userarray) if defined($userarray);
-		$numbers{$phoneno} = undef if defined($phoneno);
+		if ($argpart =~ /filtermodule:/) {
+			$filter_arg = substr($argpart,length("filtermodule:"));
+		} else {
+			my ($userarray, $phoneno) = _ArgToUsers($ticket, $argpart);
+			_AddPagersToRecipients($destusers, $userarray) if defined($userarray);
+			$numbers{$phoneno} = undef if defined($phoneno);
+		}
+	}
+	if ($filter_arg) {
+		RT::Logger->debug("SMSNotify: Using phone filter argument " . $filter_arg);
 	}
 	# For each unique user to be notified, get their phone number(s) using
 	# the $SMSNotifyGetPhoneForUserFn mapping function and if it's defined,
 	# add that number as a key to the numbers hash with their user ID as the value.
 	# (If multiple users have the same number, the last user wins).
 	RT::Logger->debug("SMSNotify: Checking users for pager numbers: " . join(', ', map $_->Name, values %$destusers) );
+
+	my $getpagerfn = RT::Extension::SMSNotify::_GetPhoneLookupFunction($filter_arg);
 	foreach my $u (values %$destusers) {
 		foreach my $ph (&{$getpagerfn}($u, $ticket)) {
 			if (defined($ph)) {
@@ -177,7 +194,7 @@ sub Prepare {
 			} else {
 				RT::Logger->debug("SMSNotify: GetPhoneForUser function returned undef for " . $u->Name . ", skipping");
 			}
-			$numbers{$ph} = $u if length($ph);
+			$numbers{$ph} = $u if ($ph);
 		}
 	}
 

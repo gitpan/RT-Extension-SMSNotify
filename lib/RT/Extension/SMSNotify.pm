@@ -228,9 +228,10 @@ use strict;
 use warnings;
 
 use RT::Interface::Email;
+use RT::Extension::SMSNotify::PagerForUser;
 
 BEGIN {
-        our $VERSION = '1.02';
+        our $VERSION = '1.03';
 }
 
 use RT::Action::SMSNotify;
@@ -252,15 +253,6 @@ sub _LoadFuncFromModule {
         RT::Logger->error("SMSNotify: Loaded module $modname but no function $funcname found in the module; using default function");
     }
     return undef;
-}
-
-# Default definition of $SMSNotifyGetPhoneForUserFn
-sub _DefaultGetPagerNumberForUser {
-    # This is a function so it can be overridden in the config to use
-    # database lookups or whatever. 2nd argument (the RT::Ticket object if any)
-    # is ignored, as is the 3rd argument (a hint).
-    RT::Logger->debug("SMSNotify: Using default \$SMSNotifyGetPhoneForUserFn");
-    return $_[0]->PagerPhone if $_[0];
 }
 
 # When SMSes fail to send this function is called. It can be used to use a side
@@ -289,10 +281,15 @@ our $_GetPhoneForUserFnRef = undef;
 
 # Convenience lookup for $SMSNotifyGetPhoneForUserFn and its default
 sub _GetPhoneLookupFunction {
-    if (defined($_GetPhoneForUserFnRef)) {
+    if ($_[0]) {
+        # Override module name passed to this invocation
+        return _LoadFuncFromModule($_[0], 'GetPhoneForUser');
+    } elsif (defined($_GetPhoneForUserFnRef)) {
+        # use cached copy of configured/default
         return $_GetPhoneForUserFnRef;
     } else {
-        return $_GetPhoneForUserFnRef =_GetConfigurableFunction('SMSNotifyGetPhoneForUserFn', 'GetPhoneForUser', \&_DefaultGetPagerNumberForUser);
+        # look up configured file, failing that, use built-in default
+        return $_GetPhoneForUserFnRef =_GetConfigurableFunction('SMSNotifyGetPhoneForUserFn', 'GetPhoneForUser', \&RT::Extension::SMSNotify::PagerForUser::GetPhoneForUser);
     }
 }
 
